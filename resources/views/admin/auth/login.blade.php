@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyTrade — Connexion Admin</title>
+    <title>FINTRADER — Connexion Admin</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <!-- Arrière-plan avec un dégradé et des cercles décoratifs pour accentuer l'effet de verre -->
@@ -18,9 +18,9 @@
         {{-- Logo --}}
         <div class="text-center mb-8">
             <div class="w-20 h-20 bg-yellow-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-yellow-500/20">
-                <span class="text-slate-900 font-bold text-4xl">M</span>
+                <span class="text-slate-900 font-bold text-4xl">FT</span>
             </div>
-            <h1 class="text-white text-3xl font-bold tracking-tight">MyTrade <span class="text-yellow-500">Admin</span></h1>
+            <h1 class="text-white text-3xl font-bold tracking-tight">FINTRADER <span class="text-yellow-500">Admin</span></h1>
             <p class="text-slate-400 text-sm mt-2 font-light">Accédez à votre espace de gestion</p>
         </div>
 
@@ -61,7 +61,7 @@
         </div>
 
         <p class="text-center text-slate-500 text-xs mt-8 uppercase tracking-widest">
-            MyTrade &copy; {{ date('Y') }} — Sécurisé
+            FINTRADER &copy; {{ date('Y') }} — Sécurisé
         </p>
     </div>
 
