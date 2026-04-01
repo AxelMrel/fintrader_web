@@ -7,10 +7,8 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ContractController;
 use App\Http\Controllers\Admin\ContractTemplateController;
 use App\Http\Controllers\Admin\SubscriptionController;
+use App\Http\Controllers\Admin\PlanController;
 use Illuminate\Support\Facades\Route;
-
-
-
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login',  [AuthController::class, 'showLogin'])->name('login');
@@ -43,14 +41,28 @@ Route::prefix('admin')->name('admin.')->middleware(['admin.web'])->group(functio
     Route::delete('/contract-templates/{contractTemplate}',   [ContractTemplateController::class, 'destroy'])->name('contract-templates.destroy');
 
     // Contrats
-    Route::get('/contracts',                          [ContractController::class, 'index'])->name('contracts.index');
-    Route::get('/contracts/{contract}',               [ContractController::class, 'show'])->name('contracts.show');
-    Route::put('/contracts/{contract}/activate',      [ContractController::class, 'activate'])->name('contracts.activate');
-    Route::put('/contracts/{contract}/performance',   [ContractController::class, 'updatePerformance'])->name('contracts.performance');
-    Route::put('/contracts/{contract}/close',         [ContractController::class, 'close'])->name('contracts.close');
-    Route::put('/contracts/{contract}/cancel',        [ContractController::class, 'cancel'])->name('contracts.cancel');
+    Route::get('/contracts',                        [ContractController::class, 'index'])->name('contracts.index');
+    Route::get('/contracts/{contract}',             [ContractController::class, 'show'])->name('contracts.show');
+    Route::put('/contracts/{contract}/activate',    [ContractController::class, 'activate'])->name('contracts.activate');
+    Route::put('/contracts/{contract}/performance', [ContractController::class, 'updatePerformance'])->name('contracts.performance');
+    Route::put('/contracts/{contract}/close',       [ContractController::class, 'close'])->name('contracts.close');
+    Route::put('/contracts/{contract}/cancel',      [ContractController::class, 'cancel'])->name('contracts.cancel');
 
-    // Abonnements
-    Route::get('/subscriptions',                              [SubscriptionController::class, 'index'])->name('subscriptions.index');
-    Route::put('/subscriptions/{subscription}/activate',      [SubscriptionController::class, 'activate'])->name('subscriptions.activate');
+    // Plans d'abonnement
+    Route::get('/plans',               [PlanController::class, 'index'])->name('plans.index');
+    Route::get('/plans/create',        [PlanController::class, 'create'])->name('plans.create');
+    Route::post('/plans',              [PlanController::class, 'store'])->name('plans.store');
+    Route::get('/plans/{plan}/edit',   [PlanController::class, 'edit'])->name('plans.edit');
+    Route::put('/plans/{plan}',        [PlanController::class, 'update'])->name('plans.update');
+    Route::delete('/plans/{plan}',     [PlanController::class, 'destroy'])->name('plans.destroy');
+
+    // Souscriptions clients
+    Route::get('/subscriptions',                         [SubscriptionController::class, 'index'])->name('subscriptions.index');
+    Route::get('/subscriptions/create',                  [SubscriptionController::class, 'create'])->name('subscriptions.create');
+    Route::post('/subscriptions',                        [SubscriptionController::class, 'store'])->name('subscriptions.store');
+    Route::get('/subscriptions/{subscription}',          [SubscriptionController::class, 'show'])->name('subscriptions.show');
+    Route::get('/subscriptions/{subscription}/edit',     [SubscriptionController::class, 'edit'])->name('subscriptions.edit');
+    Route::put('/subscriptions/{subscription}',          [SubscriptionController::class, 'update'])->name('subscriptions.update');
+    Route::delete('/subscriptions/{subscription}',       [SubscriptionController::class, 'destroy'])->name('subscriptions.destroy');
+    Route::put('/subscriptions/{subscription}/activate', [SubscriptionController::class, 'activate'])->name('subscriptions.activate');
 });

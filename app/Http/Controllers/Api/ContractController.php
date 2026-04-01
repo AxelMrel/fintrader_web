@@ -44,33 +44,39 @@ class ContractController extends Controller
         }
 
         $contract = Contract::create([
-            'client_id'                 => $request->user()->id,
-            'contract_template_id'      => $template->id,
-            'capital'                   => $validated['capital'],
-            'currency'                  => $template->currency,
-            'entry_fees'                => $template->entry_fees,
-            'investor_share'            => $template->investor_share,
-            'manager_share'             => $template->manager_share,
-            'early_withdrawal_penalty'  => $template->early_withdrawal_penalty,
-            'capital_protection'        => $template->capital_protection,
-            'duration_months'           => $template->duration_months,
-            'status'                    => 'pending',
-            'client_accepted'           => true,
-            'accepted_at'               => now(),
-        ]);
+        'client_id'                 => $request->user()->id,
+        'contract_template_id'      => $template->id,
+        'capital'                   => $validated['capital'],
+        'currency'                  => $template->currency,
+        'entry_fees'                => $template->entry_fees,
+        'investor_share'            => $template->investor_share,
+        'manager_share'             => $template->manager_share,
+        'early_withdrawal_penalty'  => $template->early_withdrawal_penalty,
+        'capital_protection'        => $template->capital_protection,
+        'duration_months'           => $template->duration_months,
+        'status'                    => 'pending',
+        'client_accepted'           => true,
+        'accepted_at'               => now(),
+    ]);
 
-        // Générer le PDF
+    $contract->load('template', 'client');
+
+    // Générer le PDF
+    try {
         $pdf     = Pdf::loadView('pdf.contract', compact('contract'));
         $pdfPath = "contracts/contract_{$contract->id}.pdf";
         $pdf->save(storage_path("app/public/{$pdfPath}"));
-
         $contract->update(['pdf_path' => $pdfPath]);
+    } catch (\Exception $e) {
+        // Le contrat est créé même si le PDF échoue
+        \Log::error('PDF generation failed: ' . $e->getMessage());
+    }
 
-        return response()->json([
-            'message'  => 'Contrat soumis avec succès, en attente de validation',
-            'contract' => $contract->load('template'),
-            'pdf_url'  => asset("storage/{$pdfPath}"),
-        ], 201);
+    return response()->json([
+        'message'  => 'Contrat soumis avec succès, en attente de validation',
+        'contract' => $contract->load('template'),
+        'pdf_url'  => $contract->pdf_path ? asset("storage/{$contract->pdf_path}") : null,
+    ], 201);
     }
 
     // Client : voir mes contrats
