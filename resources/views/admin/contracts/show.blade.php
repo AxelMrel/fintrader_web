@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('admin.layout')
 
 @section('page-title', 'Détail du contrat #' . $contract->id)
 @section('page-subtitle', 'Gérer ce contrat')

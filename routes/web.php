@@ -24,8 +24,9 @@ Route::prefix('admin')->name('admin.')->middleware(['admin.web'])->group(functio
     Route::get('/signals',             [SignalController::class, 'index'])->name('signals.index');
     Route::get('/signals/create',      [SignalController::class, 'create'])->name('signals.create');
     Route::post('/signals',            [SignalController::class, 'store'])->name('signals.store');
+    Route::get('/signals/{signal}/edit',  [SignalController::class, 'edit'])->name('signals.edit');
+    Route::put('/signals/{signal}',       [SignalController::class, 'update'])->name('signals.update');
     Route::get('/signals/{signal}',    [SignalController::class, 'show'])->name('signals.show');
-    Route::put('/signals/{signal}',    [SignalController::class, 'update'])->name('signals.update');
     Route::delete('/signals/{signal}', [SignalController::class, 'destroy'])->name('signals.destroy');
 
     // Utilisateurs

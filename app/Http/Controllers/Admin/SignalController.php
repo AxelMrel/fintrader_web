@@ -47,20 +47,6 @@ class SignalController extends Controller
         return view('admin.signals.show', compact('signal'));
     }
 
-    public function update(Request $request, Signal $signal)
-    {
-        $validated = $request->validate([
-            'status' => 'nullable|in:active,closed,cancelled',
-            'result' => 'nullable|in:tp_hit,sl_hit,cancelled',
-        ]);
-
-        $signal->update($validated);
-
-        return redirect()
-            ->route('admin.signals.index')
-            ->with('success', 'Signal mis à jour !');
-    }
-
     public function destroy(Signal $signal)
     {
         $signal->delete();
@@ -69,4 +55,29 @@ class SignalController extends Controller
             ->route('admin.signals.index')
             ->with('success', 'Signal supprimé !');
     }
+
+    public function edit(Signal $signal)
+    {
+        return view('admin.signals.edit', compact('signal'));
+    }
+
+public function update(Request $request, Signal $signal)
+{
+    $validated = $request->validate([
+        'pair'          => 'required|string|max:20',
+        'direction'     => 'required|in:buy,sell',
+        'entry_price'   => 'required|numeric',
+        'take_profit'   => 'required|numeric',
+        'stop_loss'     => 'required|numeric',
+        'description'   => 'nullable|string',
+        'plan_required' => 'required|in:basic,premium,vip',
+        'status'        => 'required|in:active,closed,cancelled',
+    ]);
+
+    $signal->update($validated);
+
+    return redirect()
+        ->route('admin.signals.index')
+        ->with('success', 'Signal mis à jour !');
+}
 }

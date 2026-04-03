@@ -42,7 +42,10 @@
                     </span>
                 </td>
                 <td class="p-3 text-center">
-                    <button class="text-blue-500 hover:text-blue-700 mr-2 text-sm">Modifier</button>
+                    <a href="{{ route('admin.signals.edit', $signal->id) }}" 
+                        class="text-blue-500 hover:text-blue-700 mr-2 text-sm">
+                        Modifier
+                    </a>
                     <form action="{{ route('admin.signals.destroy', $signal->id) }}" method="POST" class="inline">
                         @csrf
                         @method('DELETE')
