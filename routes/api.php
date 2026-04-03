@@ -7,7 +7,6 @@ use App\Http\Controllers\Api\SubscriptionController;
 use App\Http\Controllers\Api\ContractController;
 use Illuminate\Support\Facades\Route;
 
-// ==================== ROUTES PUBLIQUES ====================
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login',    [AuthController::class, 'login']);
@@ -17,7 +16,6 @@ Route::prefix('auth')->group(function () {
 Route::get('/plans',              [PlanController::class, 'index']);
 Route::get('/contract-templates', [ContractController::class, 'templates']);
 
-// ==================== ROUTES PROTÉGÉES ====================
 Route::middleware('auth:sanctum')->group(function () {
 
     // Auth
@@ -37,7 +35,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/contracts/mine',       [ContractController::class, 'myContracts']);
     Route::get('/contracts/{contract}', [ContractController::class, 'show']);
 
-    // ==================== ROUTES ADMIN ====================
     Route::middleware('admin')->group(function () {
 
         // Signaux
