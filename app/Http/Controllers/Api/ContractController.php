@@ -79,7 +79,7 @@ class ContractController extends Controller
     ], 201);
     }
 
-    // Client : voir mes contrats
+    // Dans Api/ContractController
     public function myContracts(Request $request): JsonResponse
     {
         $contracts = Contract::where('client_id', $request->user()->id)
@@ -88,18 +88,22 @@ class ContractController extends Controller
             ->get()
             ->map(function ($contract) {
                 return [
-                    'id'               => $contract->id,
-                    'template_name'    => $contract->template->name,
-                    'capital'          => $contract->capital,
-                    'currency'         => $contract->currency,
-                    'status'           => $contract->status,
-                    'start_date'       => $contract->start_date,
-                    'end_date'         => $contract->end_date,
-                    'current_capital'  => $contract->current_capital,
-                    'profit_loss'      => $contract->profit_loss,
-                    'profit_percent'   => $contract->profitPercentage(),
-                    'investor_profit'  => $contract->investorProfit(),
-                    'pdf_url'          => $contract->pdf_path
+                    'id'              => $contract->id,
+                    'template_name'   => $contract->template->name,
+                    'capital'         => $contract->capital,
+                    'currency'        => $contract->currency,
+                    'entry_fees'      => $contract->entry_fees,        
+                    'investor_share'  => $contract->investor_share,    
+                    'manager_share'   => $contract->manager_share,     
+                    'duration_months' => $contract->duration_months,   
+                    'status'          => $contract->status,
+                    'start_date'      => $contract->start_date,
+                    'end_date'        => $contract->end_date,
+                    'current_capital' => $contract->current_capital,
+                    'profit_loss'     => $contract->profit_loss,
+                    'profit_percent'  => $contract->profitPercentage(),
+                    'investor_profit' => $contract->investorProfit(),
+                    'pdf_url'         => $contract->pdf_path
                         ? asset("storage/{$contract->pdf_path}")
                         : null,
                 ];
