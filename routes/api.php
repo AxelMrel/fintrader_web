@@ -35,6 +35,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/contracts/mine',       [ContractController::class, 'myContracts']);
     Route::get('/contracts/{contract}', [ContractController::class, 'show']);
 
+
+    // Statistiques de parrainage
+    Route::get('/referral/stats', function (Request $request) {
+        $user = $request->user()->load('referrals');
+        return response()->json([
+            'referral_code'    => $user->referral_code,
+            'referral_balance' => $user->referral_balance,
+            'total_referrals'  => $user->referrals->count(),
+            'commissions'      => $user->referralCommissions()
+                ->with('sourceUser', 'contract')
+                ->latest()
+                ->get(),
+        ]);
+    });
+
     Route::middleware('admin')->group(function () {
 
         // Signaux

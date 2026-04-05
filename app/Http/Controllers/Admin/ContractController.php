@@ -67,12 +67,8 @@ class ContractController extends Controller
         ]);
 
         $profitLoss     = $validated['current_capital'] - $contract->capital;
-        $managerProfit  = $profitLoss > 0
-            ? ($profitLoss * $contract->manager_share / 100)
-            : 0;
-        $investorProfit = $profitLoss > 0
-            ? ($profitLoss * $contract->investor_share / 100)
-            : 0;
+        $managerProfit  = $profitLoss > 0 ? ($profitLoss * $contract->manager_share / 100) : 0;
+        $investorProfit = $profitLoss > 0 ? ($profitLoss * $contract->investor_share / 100) : 0;
 
         $contract->update([
             'status'          => 'closed',
@@ -80,6 +76,11 @@ class ContractController extends Controller
             'profit_loss'     => $profitLoss,
             'end_date'        => now(),
         ]);
+
+        // 👇 Distribuer les commissions de parrainage
+        if ($profitLoss > 0) {
+            ReferralService::distributeCommissions($contract);
+        }
 
         return redirect()
             ->route('admin.contracts.index')

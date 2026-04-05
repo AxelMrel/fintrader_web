@@ -9,27 +9,38 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use App\Services\ReferralService;
 
 class AuthController extends Controller
 {
     public function register(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name'  => 'required|string|max:255',
-            'email'      => 'required|string|email|unique:users',
-            'password'   => 'required|string|min:8|confirmed',
-            'phone'      => 'nullable|string|max:20',
-            'role'       => 'nullable|in:client,trader',
+            'first_name'    => 'required|string|max:255',
+            'last_name'     => 'required|string|max:255',
+            'email'         => 'required|string|email|unique:users',
+            'password'      => 'required|string|min:8|confirmed',
+            'phone'         => 'nullable|string|max:20',
+            'role'          => 'nullable|in:client,trader',
+            'referral_code' => 'nullable|string|exists:users,referral_code', // 👈
         ]);
 
+        // Trouver le parrain si code fourni
+        $referredBy = null;
+        if (!empty($validated['referral_code'])) {
+            $parrain    = User::where('referral_code', $validated['referral_code'])->first();
+            $referredBy = $parrain?->id;
+        }
+
         $user = User::create([
-            'first_name' => $validated['first_name'],
-            'last_name'  => $validated['last_name'],
-            'email'      => $validated['email'],
-            'password'   => Hash::make($validated['password']),
-            'phone'      => $validated['phone'] ?? null,
-            'role'       => $validated['role'] ?? 'client',
+            'first_name'    => $validated['first_name'],
+            'last_name'     => $validated['last_name'],
+            'email'         => $validated['email'],
+            'password'      => Hash::make($validated['password']),
+            'phone'         => $validated['phone'] ?? null,
+            'role'          => $validated['role'] ?? 'client',
+            'referral_code' => ReferralService::generateCode(), // 👈
+            'referred_by'   => $referredBy,                    // 👈
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
